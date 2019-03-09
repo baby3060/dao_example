@@ -22,7 +22,7 @@ public class UserDAO {
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String sql = "Insert Into User (user_id, pass_wd, name, age) Values (?, ?, ?, ?)";
+		String sql = "Insert Into TBUSER (user_id, pass_wd, name, age) Values (?, ?, ?, ?)";
         
         String connectionStr = String.format("%s%s", this.config.getHost(), this.config.getDatabaseName());
 		
@@ -56,7 +56,7 @@ public class UserDAO {
     public void deleteAll() {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String sql = "Delete From User ";
+		String sql = "Delete From TBUSER ";
         
         String connectionStr = String.format("%s%s", this.config.getHost(), this.config.getDatabaseName());
 

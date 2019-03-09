@@ -1,7 +1,7 @@
 package net.example.model;
 
 /**
- * CREATE TABLE `user` (
+ * CREATE TABLE `TBUSER` (
  *   `user_id` varchar(10) NOT NULL,
  *   `pass_wd` varchar(15) DEFAULT NULL,
  *   `name` varchar(10) DEFAULT NULL,
