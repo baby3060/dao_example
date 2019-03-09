@@ -3,12 +3,35 @@
  */
 package net.example;
 
+import net.example.common.*;
+import net.example.model.*;
+import net.example.dao.*;
+
 public class App {
-    public String getGreeting() {
-        return "Hello world.";
+    public static void main(String[] args) {
+        XMLParsingConfig parConfig = new XMLParsingConfig();
+
+        try {
+        	ConnectionBean mysqlConfig1 = parConfig.setConfig("mysql_conn.xml");
+
+            UserDAO userDao = new UserDAO(mysqlConfig1);
+
+            userDao.deleteAll();
+
+            User user= new User();
+
+            user.setUser_id("test");
+            user.setPass_wd("12345");
+            user.setAge(15);
+            user.setName("p");
+            
+            System.out.println(String.valueOf(userDao.addUser(user)).equals("1")?"OK":"NG");
+            
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
-    }
+
+
 }

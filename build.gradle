@@ -12,6 +12,8 @@ plugins {
 
     // Apply the application plugin to add support for building an application
     id 'application'
+
+    id 'eclipse'
 }
 
 repositories {
@@ -26,6 +28,9 @@ dependencies {
 
     // Use TestNG framework, also requires calling test.useTestNG() below
     testImplementation 'org.testng:testng:6.14.3'
+
+    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
+    compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.15'
 }
 
 // Define the main class for the application
@@ -35,3 +40,5 @@ test {
     // Use TestNG for unit tests
     useTestNG()
 }
+
+[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
