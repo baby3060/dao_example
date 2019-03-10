@@ -1,0 +1,7 @@
+<class name="${dbms}_connector_info">
+    <info name="className" value="com.mysql.cj.jdbc.Driver[RDBMS 별 ClassName : 오라클은 다름]" />
+    <info name="host" value="[접속 정보]" />
+    <info name="databaseName" value="[DB 이름]" />
+    <info name="userName" value="[User Name]" />
+    <info name="userPass" value="[User Password]" />
+</class>
