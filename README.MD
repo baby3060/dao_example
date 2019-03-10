@@ -3,10 +3,9 @@
 ## DAO 계속해서 발전해 나갈 생각 
 
 ### RDBMS는 MariaDB 사용 => Oracle 등의 다른 DBMS도 사용할 예정
+### 커넥션 정보를 불러오는 건 따로 뺐음.
 
-#### 모든 DBMS에서 사용할 데이터베이스 이름은 simple
-
-##### Gradle에서 OJDBC 연결하려고 하니 안떴을 때 해결 방법
+#### Gradle에서 OJDBC 연결하려고 하니 안떴을 때 해결 방법
 
 1. oracle home에서 ojdbc7.jar 다운
 
