@@ -25,7 +25,7 @@ public class App {
             user.setAge(15);
             user.setName("p");
             
-            System.out.println(String.valueOf(userDao.addUser(user)).equals("1")?"OK":"NG");
+            userDao.mixAddAndUpdate(user);
             
         } catch(Exception e) {
             e.printStackTrace();

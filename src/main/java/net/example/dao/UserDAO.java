@@ -16,21 +16,16 @@ public class UserDAO {
         this.config = config;
     }
 
-    // 엉망진창 소스
     public int addUser(User user) {
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		String sql = "Insert Into TBUSER (user_id, pass_wd, name, age) Values (?, ?, ?, ?)";
         
-        String connectionStr = String.format("%s%s", this.config.getHost(), this.config.getDatabaseName());
-		
 		int result = 0;
 
 		try {
-            Class.forName(this.config.getClassName());
-            
-            conn = DriverManager.getConnection(connectionStr, this.config.getUserName(), this.config.getUserPass());
+            conn = getConnection();
 
 			conn.setAutoCommit(false);
 
@@ -45,10 +40,7 @@ public class UserDAO {
 		} catch(SQLException sql_ex) {
 			sql_ex.printStackTrace();
 			result = -1;
-		} catch(ClassNotFoundException cnfe_out) {
-			cnfe_out.printStackTrace();
-			result = -1;
-        } catch(Exception e) {
+		} catch(Exception e) {
 			e.printStackTrace();
 			result = -1;
 		} finally {
@@ -68,18 +60,14 @@ public class UserDAO {
 		return result;
     }
     
-
     public int deleteAll() {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		String sql = "Delete From TBUSER ";
         
-        String connectionStr = String.format("%s%s", this.config.getHost(), this.config.getDatabaseName());
 		int result = 0;
 		try {
-			Class.forName(this.config.getClassName());
-            
-            conn = DriverManager.getConnection(connectionStr, this.config.getUserName(), this.config.getUserPass());
+			conn = getConnection();
 
 			conn.setAutoCommit(false);
 
@@ -88,10 +76,7 @@ public class UserDAO {
 		} catch(SQLException sql_ex) {
 			sql_ex.printStackTrace();
 			result = -1;
-		} catch(ClassNotFoundException cnfe_out) {
-			cnfe_out.printStackTrace();
-			result = -1;
-        } catch(Exception e) {
+		} catch(Exception e) {
 			e.printStackTrace();
 			result = -1;
 		} finally {
@@ -109,6 +94,119 @@ public class UserDAO {
 			if( conn != null ) { try { conn.close(); } catch(Exception e) { } }
 		}
 		return result;
+	}
+
+	/**
+	 * Insert 후 Update
+	 * @param user
+	 */
+	public void mixAddAndUpdate(User user) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		String sql = "Insert Into TBUSER (user_id, pass_wd, name, age) Values (?, ?, ?, ?)";
+
+		String updateSql = "Update TBUSER Set age = 55 Where user_id = ? ";
+
+		try {
+
+			conn = getConnection();
+
+			conn.setAutoCommit(false);
+
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, user.getUser_id());
+			pstmt.setString(2, user.getPass_wd());
+			pstmt.setString(3, user.getName());
+			pstmt.setInt(4, user.getAge());
+				
+			pstmt.executeUpdate();
+			
+			pstmt = conn.prepareStatement(updateSql);
+
+			pstmt.setString(1, user.getUser_id());
+
+			pstmt.executeUpdate();
+
+			try {
+				conn.commit();
+			} catch(Exception coE) {
+
+			}
+		} catch(Exception e) {
+			try {
+				conn.rollback();
+			} catch(Exception innerE) {
+
+			}
+			e.printStackTrace();
+		} finally {
+			if( pstmt != null ) { try { pstmt.close(); } catch(Exception e) { } }
+			if( conn != null ) { try { conn.close(); } catch(Exception e) { } }
+		}
+	}
+
+	/**
+	 * 서비스 메소드에서 사용하는게 좋은 메소드 둘
+	 * mixAddAndUpdate를 둘로 나눔
+	 * conn.setAutoCommit(false); 을 서비스 메소드에서 사용
+	 * Connection 메소드를 계속해서 넘김(서비스 메소드에서 생성 후)
+	 * 서비스 메소드에서 Connection 닫아줘야함.
+	 * @param conn
+	 * @param user
+	 */
+	public void addUser(Connection conn, User user) throws Exception {
+		PreparedStatement pstmt = null;
+		String sql = "Insert Into TBUSER (user_id, pass_wd, name, age) Values (?, ?, ?, ?)";
+        
+		try {
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, user.getUser_id());
+			pstmt.setString(2, user.getPass_wd());
+			pstmt.setString(3, user.getName());
+			pstmt.setInt(4, user.getAge());
+				
+			pstmt.executeUpdate();
+		} catch(Exception e) {
+			throw new Exception(e);
+		} finally {
+			if( pstmt != null ) { try { pstmt.close(); } catch(Exception e) { } }
+		}
+	}
+
+	public void updateUser(Connection conn, User user) throws Exception {
+		PreparedStatement pstmt = null;
+		String sql = "Update TBUSER Set age = 75 Where user_id = ? ";
+        
+		try {
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, user.getUser_id());
+			
+			pstmt.executeUpdate();
+		} catch(Exception e) {
+			throw new Exception(e);
+		} finally {
+			if( pstmt != null ) { try { pstmt.close(); } catch(Exception e) { } }
+		}
+	}
+
+	public Connection getConnection() {
+		Connection conn = null;
+
+		String connectionStr = String.format("%s%s", this.config.getHost(), this.config.getDatabaseName());
+
+		try {
+			Class.forName(this.config.getClassName());
+            
+			conn = DriverManager.getConnection(connectionStr, this.config.getUserName(), this.config.getUserPass());
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+
+		return conn;
 	}
 
 }

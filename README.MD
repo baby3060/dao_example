@@ -1,7 +1,5 @@
 # DAO 테스트
 
-## DAO 계속해서 발전해 나갈 생각 
-
 ### RDBMS는 MariaDB 사용 => Oracle 등의 다른 DBMS도 사용할 예정
 ### 커넥션 정보를 불러오는 건 따로 뺐음.
 
@@ -28,3 +26,5 @@
         compile('com.oracle:ojdbc7:12.1.0')
     }
 </pre>
+
+### Transaction 적용의 경우 서비스에서 적용하는 게 좋음.
