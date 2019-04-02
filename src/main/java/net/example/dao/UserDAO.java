@@ -6,16 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import net.example.model.*;
+import net.example.connection.*;
 import net.example.common.ConnectionBean;
 
 public class UserDAO {
     
-    private ConnectionBean config;
-
-    public UserDAO(ConnectionBean config) {
-        this.config = config;
-    }
-
     public int addUser(User user) {
 		
 		Connection conn = null;
@@ -25,7 +20,7 @@ public class UserDAO {
 		int result = 0;
 
 		try {
-            conn = getConnection();
+      conn = ConnectionMaker.getConnection();
 
 			conn.setAutoCommit(false);
 
@@ -67,7 +62,7 @@ public class UserDAO {
         
 		int result = 0;
 		try {
-			conn = getConnection();
+			conn = ConnectionMaker.getConnection();
 
 			conn.setAutoCommit(false);
 
@@ -110,7 +105,7 @@ public class UserDAO {
 
 		try {
 
-			conn = getConnection();
+			conn = ConnectionMaker.getConnection();
 
 			conn.setAutoCommit(false);
 
@@ -193,20 +188,5 @@ public class UserDAO {
 		}
 	}
 
-	public Connection getConnection() {
-		Connection conn = null;
-
-		String connectionStr = String.format("%s%s", this.config.getHost(), this.config.getDatabaseName());
-
-		try {
-			Class.forName(this.config.getClassName());
-            
-			conn = DriverManager.getConnection(connectionStr, this.config.getUserName(), this.config.getUserPass());
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-
-		return conn;
-	}
 
 }

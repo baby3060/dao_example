@@ -4,17 +4,16 @@
 package net.example;
 
 import net.example.common.*;
+import net.example.connection.*;
 import net.example.model.*;
 import net.example.dao.*;
 
 public class App {
     public static void main(String[] args) {
-        XMLParsingConfig parConfig = new XMLParsingConfig();
 
         try {
-        	ConnectionBean mysqlConfig1 = parConfig.setConfig("mysql_conn.xml");
 
-            UserDAO userDao = new UserDAO(mysqlConfig1);
+            UserDAO userDao = new UserDAO();
 
             userDao.deleteAll();
 
