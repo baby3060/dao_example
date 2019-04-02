@@ -3,7 +3,6 @@ package net.example.dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import net.example.model.*;
@@ -33,6 +32,8 @@ public class UserDAO {
             
             conn = DriverManager.getConnection(connectionStr, this.config.getUserName(), this.config.getUserPass());
 
+			conn.setAutoCommit(false);
+
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, user.getUser_id());
 			pstmt.setString(2, user.getPass_wd());
@@ -40,11 +41,26 @@ public class UserDAO {
 			pstmt.setInt(4, user.getAge());
 				
 			result = pstmt.executeUpdate();
+
 		} catch(SQLException sql_ex) {
 			sql_ex.printStackTrace();
+			result = -1;
 		} catch(ClassNotFoundException cnfe_out) {
-            cnfe_out.printStackTrace();
-        } finally {
+			cnfe_out.printStackTrace();
+			result = -1;
+        } catch(Exception e) {
+			e.printStackTrace();
+			result = -1;
+		} finally {
+			if( result > 0 ) {
+				try {
+					conn.commit();
+				} catch(Exception e) { }
+			} else {
+				try {
+					conn.rollback();
+				} catch(Exception e) { }
+			}
 			if( pstmt != null ) { try { pstmt.close(); } catch(Exception e) { } }
 			if( conn != null ) { try { conn.close(); } catch(Exception e) { } }
 		}
@@ -53,28 +69,46 @@ public class UserDAO {
     }
     
 
-    public void deleteAll() {
+    public int deleteAll() {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		String sql = "Delete From TBUSER ";
         
         String connectionStr = String.format("%s%s", this.config.getHost(), this.config.getDatabaseName());
-
+		int result = 0;
 		try {
 			Class.forName(this.config.getClassName());
             
             conn = DriverManager.getConnection(connectionStr, this.config.getUserName(), this.config.getUserPass());
 
+			conn.setAutoCommit(false);
+
 			pstmt = conn.prepareStatement(sql);
-			int result = pstmt.executeUpdate();
+			result = pstmt.executeUpdate();
 		} catch(SQLException sql_ex) {
 			sql_ex.printStackTrace();
+			result = -1;
 		} catch(ClassNotFoundException cnfe_out) {
-            cnfe_out.printStackTrace();
-        } finally {
+			cnfe_out.printStackTrace();
+			result = -1;
+        } catch(Exception e) {
+			e.printStackTrace();
+			result = -1;
+		} finally {
+			if( result > 0 ) {
+				try {
+					conn.commit();
+				} catch(Exception e) { }
+			} else {
+				try {
+					conn.rollback();
+				} catch(Exception e) { }
+			}
+
 			if( pstmt != null ) { try { pstmt.close(); } catch(Exception e) { } }
 			if( conn != null ) { try { conn.close(); } catch(Exception e) { } }
 		}
+		return result;
 	}
 
 }

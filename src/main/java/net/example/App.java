@@ -12,7 +12,7 @@ public class App {
         XMLParsingConfig parConfig = new XMLParsingConfig();
 
         try {
-        	ConnectionBean mysqlConfig1 = parConfig.setConfig("oracle_conn.xml");
+        	ConnectionBean mysqlConfig1 = parConfig.setConfig("mysql_conn.xml");
 
             UserDAO userDao = new UserDAO(mysqlConfig1);
 
