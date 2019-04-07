@@ -1,13 +1,11 @@
 package net.example.dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import net.example.model.*;
 import net.example.connection.*;
-import net.example.common.ConnectionBean;
 
 public class UserDAO {
     
