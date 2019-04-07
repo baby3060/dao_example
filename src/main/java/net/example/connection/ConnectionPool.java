@@ -11,15 +11,11 @@ public class ConnectionPool {
     // 사용하지 않고 풀에 저장되어 있는 Connection
     private List<Connection> freeConnectionList = new ArrayList<Connection>();
 
-    // 최대 카운트
-    private int maxCount;
-
     // 초기 갯수
     private int initCount;
 
-    public ConnectionPool(int maxCount, int initCount) {
+    public ConnectionPool(int initCount) {
         this.useCount = 0;
-        this.maxCount = maxCount;
         this.initCount = initCount;
 
         if(initCount > 0) {
@@ -46,7 +42,6 @@ public class ConnectionPool {
             conn = freeConnectionList.get(0);
 
             freeConnectionList.remove(0);
-
             try {
                 if( conn.isClosed() ) {
                     conn = ConnectionMaker.getConnection();
@@ -58,6 +53,8 @@ public class ConnectionPool {
             conn = ConnectionMaker.getConnection();
         }
         
+        useCount++;
+
         return conn;
     }
 }

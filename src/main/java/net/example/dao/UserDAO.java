@@ -11,6 +11,8 @@ public class UserDAO {
     
     public int addUser(User user) {
 		
+			ConnectionManager connMgr = new ConnectionManager();
+
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		String sql = "Insert Into TBUSER (user_id, pass_wd, name, age) Values (?, ?, ?, ?)";
@@ -18,7 +20,7 @@ public class UserDAO {
 		int result = 0;
 
 		try {
-      conn = ConnectionMaker.getConnection();
+      conn = connMgr.getConnection();
 
 			conn.setAutoCommit(false);
 
@@ -47,7 +49,7 @@ public class UserDAO {
 				} catch(Exception e) { }
 			}
 			if( pstmt != null ) { try { pstmt.close(); } catch(Exception e) { } }
-			if( conn != null ) { try { conn.close(); } catch(Exception e) { } }
+			connMgr.freeConnection(conn);
 		}
 
 		return result;
